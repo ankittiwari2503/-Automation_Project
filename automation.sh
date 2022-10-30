@@ -32,8 +32,6 @@ tar -cf /tmp/${name}-httpd-logs-${timestamp}.tar *.log
 
 if [[ -f /tmp/${name}-httpd-logs-${timestamp}.tar ]];
 then
-#	aws s3 cp /tmp/${name}-httpd-logs-${timestamp}.tar s3://${s3_bucket}/
 	aws s3 cp /tmp/${name}-httpd-logs-${timestamp}.tar s3://${s3_bucket}/${name}-httpd-logs-${timestamp}.tar
-#	aws s3 cp /tmp/Ankit-httpd-logs-29102022-174550.tar s3://upgrad-ankittiwari
 
 fi
