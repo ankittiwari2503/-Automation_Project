@@ -30,8 +30,22 @@ timestamp=$(date '+%d%m%Y-%H%M%S')
 cd /var/log/apache2
 tar -cf /tmp/${name}-httpd-logs-${timestamp}.tar *.log
 
-if [[ -f /tmp/${name}-httpd-logs-${timestamp}.tar ]];
+if [[ -f /tmp/${name}-httpd-logs-${timestamp}.tar ]]
 then
 	aws s3 cp /tmp/${name}-httpd-logs-${timestamp}.tar s3://${s3_bucket}/${name}-httpd-logs-${timestamp}.tar
+fi
 
+bookkeep="/var/www/html"
+if [ ! -f ${bookkeep}/inventory.html ]
+then
+    echo -e 'Log Type\t-\tTime Created\t-\tType\t-\tSize' >${bookkeep}/inventory.html
+fi
+if [[ -f ${bookkeep}/inventory.html ]]
+then
+    size=$(du -h /tmp/${name}-httpd-logs-${timestamp}.tar | awk '{print $1}')
+	echo -e "httpd-logs\t-\t${timestamp}\t-\ttar\t-\t${size}" >> ${bookkeep}/inventory.html
+fi
+if [[ ! -f /etc/cron.d/Automation ]]
+then
+    echo " * * * * * root/Automation_Project/Automation.sh" >> /etc/cron.d/Automation
 fi
